@@ -98,6 +98,12 @@ await adaptModule('NavUI', input => {
   return out;
 });
 
+// Adapt Footer: Upright logo orientation and eliminate A particle swirl
+await adaptModule('Footer', input => {
+  let out = replace(input, '_this.layers.particles.layers.logo.rotation.x=Math.radians(180)', '_this.layers.particles.layers.logo.rotation.x=0,_this.layers.particles.layers.logo.scale.y=-5.64,_this.layers.particles.layers.particles.group.visible=!1', 'Footer logo upright and hide A particles');
+  return out;
+});
+
 await adaptModule('ContactUI', input => {
   let out = input;
   const entries = [
@@ -132,6 +138,17 @@ app = replace(app, app.slice(infoStart, infoEnd), `${brand}. ${slogan}. Experien
 app = app.replaceAll('Get more information about Active Theory, the agency that created this website.', `Get more information about ${brand}.`)
   .replaceAll('Open the contact modal for Active Theory.', `Open the info modal for ${brand}.`)
   .replaceAll('Please use the provided email to reach out.', 'Contact hello@60below.com.');
+
+// MusicPlayerDOM: Set "Twenty Five Winters" as custom primary soundtrack
+const originalSongs = 'let SONGS=[{title:"Sergey Azbel - Themis",src:"assets/music/Sergey Azbel - Themis.mp3"},{title:"nuer self - Dusk",src:"assets/music/nuer self - Dusk.mp3"},{title:"Flint - Fly up High",src:"assets/music/Flint - Fly up High.mp3"},{title:"Hotham - To the Stars",src:"assets/music/Hotham - To the Stars.mp3"},{title:"Jozeque - Sultans of Streams",src:"assets/music/Jozeque - Sultans of Streams.mp3"},{title:"Downtown Binary - Other Worlds",src:"assets/music/Downtown Binary - Other Worlds.mp3"},{title:"Magiksolo - Quantum World",src:"assets/music/Magiksolo - Quantum World.mp3"},{title:"BXRDVJA - Ghost Cities",src:"assets/music/BXRDVJA - Ghost Cities.mp3"}];SONGS=SONGS.shuffle()';
+const customSongs = 'let SONGS=[{title:"Twenty Five Winters",src:"assets/music/Twenty_Five_Winters.mp3"},{title:"Sergey Azbel - Themis",src:"assets/music/Sergey Azbel - Themis.mp3"},{title:"Downtown Binary - Other Worlds",src:"assets/music/Downtown Binary - Other Worlds.mp3"}];SONGS=SONGS';
+app = replace(app, originalSongs, customSongs, 'Custom soundtrack list');
+app = replace(app, '_this.set("songIndex",Math.random(0,SONGS.length-1))', '_this.set("songIndex",0)', 'Initial song Twenty Five Winters');
+
+// NavUIItem: Bind SOUND button click to audio toggle
+const originalNavClick = 'function click(){"contact"==link?active?_this.set("ViewController/contact",!1):_this.set("ViewController/contact",!0):(_this.set("ViewController/contact",!1),_this.fire("ViewController/goToWork"),_this.set("Work/project",null))}';
+const soundNavClick = 'function click(){"sound"==link?_this.set("Global/audioEnabled",!_this.get("Global/audioEnabled")):"contact"==link?active?_this.set("ViewController/contact",!1):_this.set("ViewController/contact",!0):(_this.set("ViewController/contact",!1),_this.fire("ViewController/goToWork"),_this.set("Work/project",null))}';
+app = replace(app, originalNavClick, soundNavClick, 'NavUIItem SOUND click audio toggle');
 
 await write('assets/js/app.1780406240914.js', app);
 
@@ -211,6 +228,10 @@ set('INPUT_Element_8_WorkDetailContent_text3d_text', '2026\n60BELOW\n3D / WEBGL'
 set('INPUT_Element_15_CleanRoom_text3d_text', '// 60BELOW\nSTUDIO ->');
 set('INPUT_Element_20_CleanRoom_text3d_text', 'sub-zero digital aesthetics & interactive 3d experiences');
 
+// Eliminate legacy Active Theory "A" logo particles emerging from bottom of spine
+uil['sl_TreeScene_22_deleted'] = true;
+uil['INPUT_Config_22_TreeScene_visible'] = false;
+
 for (const [key, filename] of [
   ['INPUT_Config_2_About_geometry', 'monogram-home.json'],
   ['INPUT_Config_8_ParticleTest_geometry', 'monogram-home.json'],
@@ -240,6 +261,11 @@ for (const cover of new Set(studies.map(study => study.video.thumbnail.split('/'
 for (const study of studies) await write(study.video.url.slice(1), await fs.readFile(path.join(publicDir, study.video.thumbnail)));
 await write('assets/daily/hero.jpg', await fs.readFile(path.join(originals, 'hero.jpg')));
 
+const customAudioPath = path.join(root, 'src/assets/music/Twenty_Five_Winters.mp3');
+if (await fs.stat(customAudioPath).then(() => true).catch(() => false)) {
+  await write('assets/music/Twenty_Five_Winters.mp3', await fs.readFile(customAudioPath));
+}
+
 // Generate 2D Brand assets: monogram.png and wordmark.png
 const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200">
   <rect width="400" height="200" fill="black"/>
@@ -263,10 +289,10 @@ const openPath = font.getPath('-60', 0, 0, 100);
 const shapePath = new ShapePath();
 
 for (const cmd of openPath.commands) {
-  if (cmd.type === 'M') shapePath.moveTo(cmd.x, cmd.y);
-  else if (cmd.type === 'L') shapePath.lineTo(cmd.x, cmd.y);
-  else if (cmd.type === 'Q') shapePath.quadraticCurveTo(cmd.x1, cmd.y1, cmd.x, cmd.y);
-  else if (cmd.type === 'C') shapePath.bezierCurveTo(cmd.x1, cmd.y1, cmd.x2, cmd.y2, cmd.x, cmd.y);
+  if (cmd.type === 'M') shapePath.moveTo(cmd.x, -cmd.y);
+  else if (cmd.type === 'L') shapePath.lineTo(cmd.x, -cmd.y);
+  else if (cmd.type === 'Q') shapePath.quadraticCurveTo(cmd.x1, -cmd.y1, cmd.x, -cmd.y);
+  else if (cmd.type === 'C') shapePath.bezierCurveTo(cmd.x1, -cmd.y1, cmd.x2, -cmd.y2, cmd.x, -cmd.y);
 }
 
 const shapes = shapePath.toShapes(true);
@@ -289,7 +315,7 @@ for (const [filename, xy, depth, z] of [['monogram-home.json', .7191892068, .051
 base.dispose();
 
 // Verify non-adapted visual core modules
-const preservedNames = ['Home', 'About', 'Footer', 'WorkItems', 'WorkDetail', 'WorkDetailParticles', 'HomeLogoShader', 'AboutLogoShader', 'LoaderGLUI', 'LoaderView', 'FXScroll', 'MouseFluid', 'Fluid'];
+const preservedNames = ['Home', 'About', 'WorkItems', 'WorkDetail', 'WorkDetailParticles', 'HomeLogoShader', 'AboutLogoShader', 'LoaderGLUI', 'LoaderView', 'FXScroll', 'MouseFluid', 'Fluid'];
 const preserved = [];
 for (const name of preservedNames) {
   const source = await moduleSource(name);
