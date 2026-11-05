@@ -155,8 +155,48 @@ const faviconTags = `
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/meta/favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/meta/apple-touch-icon.png">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <style>
+      .FXScroll, div[class*="FXScroll"], #Stage .FXScroll {
+        touch-action: pan-y !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: contain !important;
+      }
+    </style>
 `;
 html = html.replace('</head>', `${faviconTags}\n</head>`);
+
+const mobileTouchScript = `
+    <script>
+      !function() {
+        let lastY = 0, touchActive = false;
+        window.addEventListener('touchstart', function(e) {
+          if (e.touches && e.touches.length === 1) {
+            lastY = e.touches[0].clientY;
+            touchActive = true;
+          }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', function(e) {
+          if (!touchActive || !e.touches || e.touches.length !== 1) return;
+          const currentY = e.touches[0].clientY;
+          const deltaY = lastY - currentY;
+          lastY = currentY;
+          const scrollEl = document.querySelector('.FXScroll') || document.querySelector('div[style*="overflow-y: scroll"]');
+          if (scrollEl) {
+            scrollEl.scrollTop += deltaY * 2.2;
+          }
+        }, { passive: true });
+
+        window.addEventListener('touchend', function() {
+          touchActive = false;
+        }, { passive: true });
+        window.addEventListener('touchcancel', function() {
+          touchActive = false;
+        }, { passive: true });
+      }();
+    </script>
+`;
+html = html.replace('</body>', `${mobileTouchScript}\n</body>`);
 await write('index.html', html);
 
 // UIL Configurations
