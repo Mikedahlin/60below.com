@@ -1,1 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200"><rect width="400" height="200" fill="black"/><path fill="white" transform="translate(155.9625,148.75)" d="M34.580 0L-4.615 0L-4.615-2.535L33.865-2.535Q40.690-2.535 46.443-5.623Q52.195-8.710 56.907-14.072Q61.620-19.435 65.228-26.293Q68.835-33.150 71.240-40.755Q73.645-48.360 74.913-55.900Q76.180-63.440 76.180-70.070L76.180-70.070Q76.180-74.555 75.140-78.975Q74.100-83.395 71.793-87.035Q69.485-90.675 65.553-92.820Q61.620-94.965 55.770-94.965L55.770-94.965L16.185-94.965L16.185-97.500L56.290-97.500Q66.885-97.500 75.108-93.665Q83.330-89.830 88.010-82.355Q92.690-74.880 92.690-63.960L92.690-63.960Q92.690-50.895 88.172-39.293Q83.655-27.690 75.693-18.883Q67.730-10.075 57.168-5.038Q46.605 0 34.580 0L34.580 0ZM21.580 0L7.020 0L29.120-97.500L43.745-97.500L21.580 0Z"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#0a1c2a"/>
+      <stop offset="60%" stop-color="#03070b"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="25%" stop-color="#a6f7ff"/>
+      <stop offset="70%" stop-color="#00f5ff"/>
+      <stop offset="100%" stop-color="#0099cc"/>
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f5ff"/>
+      <stop offset="50%" stop-color="#006699"/>
+      <stop offset="100%" stop-color="#00f5ff"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- High-contrast Squircle Base -->
+  <rect x="12" y="12" width="488" height="488" rx="112" ry="112" fill="url(#bgGrad)" stroke="url(#borderGrad)" stroke-width="16"/>
+
+  <!-- Primary Minus 60 Degree Brand Mark -->
+  <g filter="url(#glow)" text-anchor="middle">
+    <text x="256" y="278" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="205" fill="url(#cyanGrad)" letter-spacing="-8">-60°</text>
+  </g>
+
+  <!-- Standout Badge Pill: 60BELOW.COM -->
+  <g transform="translate(46, 345)">
+    <rect x="0" y="0" width="420" height="84" rx="42" ry="42" fill="#001827" stroke="#00f5ff" stroke-width="7"/>
+    <text x="210" y="56" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="42" fill="#ffffff" letter-spacing="4">60BELOW.COM</text>
+  </g>
+</svg>

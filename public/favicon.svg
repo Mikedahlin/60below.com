@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#0a1c2a"/>
+      <stop offset="60%" stop-color="#03070b"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="25%" stop-color="#a6f7ff"/>
+      <stop offset="70%" stop-color="#00f5ff"/>
+      <stop offset="100%" stop-color="#0099cc"/>
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f5ff"/>
+      <stop offset="50%" stop-color="#006699"/>
+      <stop offset="100%" stop-color="#00f5ff"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- High-contrast Squircle Base -->
+  <rect x="12" y="12" width="488" height="488" rx="112" ry="112" fill="url(#bgGrad)" stroke="url(#borderGrad)" stroke-width="16"/>
+
+  <!-- Primary Minus 60 Degree Brand Mark -->
+  <g filter="url(#glow)" text-anchor="middle">
+    <text x="256" y="278" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="205" fill="url(#cyanGrad)" letter-spacing="-8">-60°</text>
+  </g>
+
+  <!-- Standout Badge Pill: 60BELOW.COM -->
+  <g transform="translate(46, 345)">
+    <rect x="0" y="0" width="420" height="84" rx="42" ry="42" fill="#001827" stroke="#00f5ff" stroke-width="7"/>
+    <text x="210" y="56" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="42" fill="#ffffff" letter-spacing="4">60BELOW.COM</text>
+  </g>
+</svg>
